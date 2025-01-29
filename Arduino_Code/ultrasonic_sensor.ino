@@ -1,37 +1,39 @@
-#define trigPin D6
-#define echoPin D7
-#define ledPin 7
+#include <ESP8266WiFi.h>
+
+// Define pins
+#define TRIG D6
+#define ECHO D7
+#define LED D5
 
 void setup() {
-    Serial.begin(9600); 
-    pinMode(trigPin, OUTPUT);
-    pinMode(echoPin, INPUT);
-    pinMode(ledPin, OUTPUT);
+    Serial.begin(115200); // Higher baud rate for ESP8266
+    pinMode(TRIG, OUTPUT);
+    pinMode(ECHO, INPUT);
+    pinMode(LED, OUTPUT);
 }
 
 void loop() {
-    long duration;
-    int distance;
-    
     // Send ultrasonic pulse
-    digitalWrite(trigPin, LOW);
+    digitalWrite(TRIG, LOW);
     delayMicroseconds(2);
-    digitalWrite(trigPin, HIGH);
+    digitalWrite(TRIG, HIGH);
     delayMicroseconds(10);
-    digitalWrite(trigPin, LOW);
-    
-    // Receive echo
-    duration = pulseIn(echoPin, HIGH);
-    distance = duration * 0.034 / 2; // Convert to cm
+    digitalWrite(TRIG, LOW);
 
-    // Send distance to Python script
+    // Measure echo pulse duration
+    long duration = pulseIn(ECHO, HIGH);
+    
+    // Convert duration to distance (in cm)
+    int distance = duration * 0.034 / 2;
+
+    // Send data via Serial
     Serial.println(distance);
 
-    // Control LED based on distance
+    // LED control: Turn ON if object is too close (<10 cm)
     if (distance < 10) {
-        digitalWrite(ledPin, HIGH); // Turn LED on
+        digitalWrite(LED, HIGH);
     } else {
-        digitalWrite(ledPin, LOW);  // Turn LED off
+        digitalWrite(LED, LOW);
     }
 
     delay(100);
