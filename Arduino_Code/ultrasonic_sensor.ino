@@ -1,5 +1,5 @@
-#define trigPin 9
-#define echoPin 10
+#define trigPin D6
+#define echoPin D7
 #define ledPin 7
 
 void setup() {
